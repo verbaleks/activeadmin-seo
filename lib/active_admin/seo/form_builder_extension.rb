@@ -30,11 +30,25 @@ module ActiveAdmin::Seo::FormBuilderExtension
           form.input :og_url   if options[:open_graph_metas][:url]
           form.input :og_image, :as => :dragonfly, :input_html => { :components => [:preview, :upload, :url, :remove ] } if options[:open_graph_metas][:image]
         end
-        form.form_buffers.last
+        if form.respond_to?(:form_buffers)
+          html = form_buffers.last
+        else
+          html = "".html_safe
+        end
+        if form.respond_to?(:form_buffers)
+          html = form_buffers.last
+        else
+          html = "".html_safe
+        end
       end
       form.form_buffers.last
     end
-    form_buffers.last << content
+    if form.respond_to?(:form_buffers)
+      html = form_buffers.last
+    else
+      html = "".html_safe
+    end
+    html << content
   end
 
   private
